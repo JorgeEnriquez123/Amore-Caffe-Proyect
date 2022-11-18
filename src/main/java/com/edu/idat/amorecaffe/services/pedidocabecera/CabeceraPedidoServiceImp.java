@@ -64,7 +64,7 @@ public class CabeceraPedidoServiceImp implements CabeceraPedidoService {
 
     @Override
     public CabeceraPedidoEntity create(CabeceraPedidoEntity cabeceraPedido) throws ClassNotFoundException {
-        String codEmpleado = cabeceraPedido.getEmpleado().getId(), codCliente = cabeceraPedido.getEmpleado().getId();
+        String codEmpleado = cabeceraPedido.getEmpleado().getId(), codCliente = cabeceraPedido.getCliente().getId();
         empleadoRepository.findById(codEmpleado).orElseThrow(()->new ClassNotFoundException(
             String.format("Empleado with id '%s' not found", codEmpleado))
         );

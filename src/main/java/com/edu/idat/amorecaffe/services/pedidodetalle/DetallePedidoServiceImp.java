@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -83,18 +84,13 @@ public class DetallePedidoServiceImp implements DetallePedidoService {
     }
 
     @Override
-    public DetallePedidoEntity update(Map<Object, Object> DetallePedidoEntityDto, String id) throws ClassNotFoundException {
+    public DetallePedidoEntity update(DetallePedidoEntity DetallePedidoEntityDto, String id) throws ClassNotFoundException {
         if (!uuidValidate.matcher(id).matches()) {
             throw new IllegalArgumentException(String.format("id '%s' must be a uuid", id));
         }
-        DetallePedidoEntity cli = this.findOne(id);
-        DetallePedidoEntityDto.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(DetallePedidoEntity.class, (String) key);
-            field.setAccessible(true);
-            ReflectionUtils.setField(field, cli, value);
-        });
-        // verificar(cli.getDni());
-        return DetallePedidoRepository.save(cli);
+        DetallePedidoEntity det = this.findOne(id);
+        BeanUtils.copyProperties(DetallePedidoEntityDto, det);
+        return DetallePedidoRepository.save(det);
     }
 
     // private void verificar(String dni){
@@ -105,3 +101,4 @@ public class DetallePedidoServiceImp implements DetallePedidoService {
     //     }
     // }
 }
+ 

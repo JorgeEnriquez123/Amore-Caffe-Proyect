@@ -19,9 +19,9 @@ public interface EmpleadoService {
 
     public EmpleadoEntity findOne(String search)throws ClassNotFoundException;
 
-    public EmpleadoEntity create(EmpleadoEntity EmpleadoEntity);
+    public EmpleadoEntity create(EmpleadoEntity EmpleadoEntity) throws ClassNotFoundException;
 
-    public EmpleadoEntity update(Map<Object, Object> EmpleadoEntityDto, String id) throws ClassNotFoundException;
+    public EmpleadoEntity update(EmpleadoEntity EmpleadoEntityDto, String id) throws ClassNotFoundException;
 
     public void delete(String id)throws ClassNotFoundException, IllegalArgumentException, Exception;
 }

@@ -1,8 +1,8 @@
 package com.edu.idat.amorecaffe.controllers;
 
 
-import com.edu.idat.amorecaffe.entity.EmpleadoEntity;
-import com.edu.idat.amorecaffe.services.empleado.EmpleadoService;
+import com.edu.idat.amorecaffe.entity.DetallePedidoEntity;
+import com.edu.idat.amorecaffe.services.pedidodetalle.DetallePedidoService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,39 +27,39 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/empleado")
-public class EmpleadoController {
+@RequestMapping("/detpedido")
+public class DetallePedidoController {
  
     @Autowired 
-    private EmpleadoService empleadoService;
+    private DetallePedidoService DetallePedidoService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<EmpleadoEntity> findAll() {
-        return empleadoService.findAll();
+    public List<DetallePedidoEntity> findAll() {
+        return DetallePedidoService.findAll();
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> add(@Valid @RequestBody EmpleadoEntity empleadoEntity) throws ClassNotFoundException{
-        return new ResponseEntity<>(empleadoService.create(empleadoEntity), HttpStatus.CREATED);
+    public ResponseEntity<?> add(@Valid @RequestBody DetallePedidoEntity DetallePedidoEntity) throws ClassNotFoundException{
+        return new ResponseEntity<>(DetallePedidoService.create(DetallePedidoEntity), HttpStatus.CREATED);
 
     }
     @PatchMapping("/update/{id}")
-    public ResponseEntity<?> patch(@PathVariable String id, @RequestBody EmpleadoEntity empleadoDto) throws ClassNotFoundException {
-        return new ResponseEntity<>(empleadoService.update(empleadoDto,id), HttpStatus.OK);
+    public ResponseEntity<?> patch(@PathVariable String id,@Valid @RequestBody DetallePedidoEntity DetallePedidoDto) throws ClassNotFoundException {
+        return new ResponseEntity<>(DetallePedidoService.update(DetallePedidoDto,id), HttpStatus.OK);
 
     }
 
     @GetMapping("/search/{search}")
     public ResponseEntity<?> search(@PathVariable String search) throws ClassNotFoundException {
-        return new ResponseEntity<>(empleadoService.findOne(search), HttpStatus.OK);
+        return new ResponseEntity<>(DetallePedidoService.findOne(search), HttpStatus.OK);
 
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) throws ClassNotFoundException,IllegalArgumentException, Exception {
-        empleadoService.delete(id);
-        return httpStatus(HttpStatus.BAD_REQUEST, String.format("Empleado with id '%s' deleted successfully",id));
+        DetallePedidoService.delete(id);
+        return httpStatus(HttpStatus.BAD_REQUEST, String.format("DetallePedido with id '%s' deleted successfully",id));
     } 
      
 

@@ -21,7 +21,7 @@ public interface DetallePedidoService {
 
     public DetallePedidoEntity create(DetallePedidoEntity detallePedidoEntity) throws ClassNotFoundException;
 
-    public DetallePedidoEntity update(Map<Object, Object> DetallePedidoEntityDto, String id) throws ClassNotFoundException ;
+    public DetallePedidoEntity update(DetallePedidoEntity DetallePedidoEntityDto, String id) throws ClassNotFoundException ;
 
     public void delete(String id) throws ClassNotFoundException, IllegalArgumentException, Exception;
 }

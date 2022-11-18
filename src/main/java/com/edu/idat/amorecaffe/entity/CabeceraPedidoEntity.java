@@ -53,22 +53,18 @@ public class CabeceraPedidoEntity implements Serializable {
    
 
     @Column(name = "total", nullable = false,columnDefinition="Decimal(10,2)")
-    @Pattern(regexp = "[0-9]*", message = "total must be a number")
-    @NotNull(message = "total must not be null")
     @Positive()
-    private float total;
+    private Double total;
     @Column(name = "fecha", nullable = false)
     private Date fecha;
-    @Column(name = "estado", nullable = false,columnDefinition = "varchar(12) default 'PROCESO'")
-    @NotNull(message = "estado must not be null")
-    @Size(min = 1)
-    private String estado;
+    @Column(name = "estado", nullable = false,columnDefinition = "bit(1) default '1'")
+    private Boolean estado;
     
 
     @PrePersist
     public void prePersist() {
         id = UUID.randomUUID().toString();
-        fecha = new Date();
-
+        fecha =  new Date();
+        if(estado == null) estado = true;
     }
 }

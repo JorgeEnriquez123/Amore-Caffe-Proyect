@@ -17,6 +17,8 @@ import org.springframework.util.ReflectionUtils;
 import com.edu.idat.amorecaffe.entity.CabeceraPedidoEntity;
 import com.edu.idat.amorecaffe.entity.EmpleadoEntity;
 import com.edu.idat.amorecaffe.repository.CabeceraPedidoRepository;
+import com.edu.idat.amorecaffe.repository.CargoRepository;
+import com.edu.idat.amorecaffe.repository.DistritoRepository;
 import com.edu.idat.amorecaffe.repository.EmpleadoRepository;
 
 /**
@@ -30,6 +32,10 @@ public class EmpleadoServiceImp implements EmpleadoService {
 
     @Autowired
     private EmpleadoRepository empleadoRepository;
+    @Autowired
+    private DistritoRepository distritoRepository;
+    @Autowired
+    private CargoRepository cargoRepository;
     @Autowired
     private CabeceraPedidoRepository cabPedidoRepository;
 
@@ -47,7 +53,7 @@ public class EmpleadoServiceImp implements EmpleadoService {
         } else {
             Empleado = empleadoRepository.findByDni(search);
         }
-        if (Empleado.equals(null)) {
+        if (Empleado == null) {
             throw new ClassNotFoundException(
                     String.format("Empleado with id or slug '%s' not found", search));
         }
@@ -55,7 +61,13 @@ public class EmpleadoServiceImp implements EmpleadoService {
     }
 
     @Override
-    public EmpleadoEntity create(EmpleadoEntity empleado) {
+    public EmpleadoEntity create(EmpleadoEntity empleado) throws ClassNotFoundException {
+        String codDistrito = empleado.getDistrito().getId(), codCargo = empleado.getCargo().getId();
+
+        distritoRepository.findById(codDistrito).orElseThrow(() -> new ClassNotFoundException(
+                String.format("Distrito with id '%s' not found", codDistrito)));
+        cargoRepository.findById(codCargo).orElseThrow(() -> new ClassNotFoundException(
+                String.format("Cargo with id '%s' not found", codCargo)));
         verificar(empleado.getDni());
         return empleadoRepository.save(empleado);
     }
@@ -75,7 +87,7 @@ public class EmpleadoServiceImp implements EmpleadoService {
     }
 
     @Override
-    public EmpleadoEntity update(Map<Object, Object> EmpleadoEntityDto, String id) throws ClassNotFoundException {
+    public EmpleadoEntity update(EmpleadoEntity EmpleadoEntityDto, String id) throws ClassNotFoundException {
         if (!uuidValidate.matcher(id).matches()) {
             throw new IllegalArgumentException(String.format("id '%s' must be a uuid", id));
         }
@@ -86,7 +98,7 @@ public class EmpleadoServiceImp implements EmpleadoService {
         return empleadoRepository.save(emp);
     }
 
-    private void verificar(String dni){
+    private void verificar(String dni) {
         EmpleadoEntity empleadoNotValid = empleadoRepository.findByDni(dni);
         if (empleadoNotValid != null) {
             throw new IllegalArgumentException(
