@@ -16,6 +16,8 @@ import org.springframework.util.ReflectionUtils;
 
 import com.edu.idat.amorecaffe.entity.CabeceraPedidoEntity;
 import com.edu.idat.amorecaffe.entity.DetallePedidoEntity;
+import com.edu.idat.amorecaffe.entity.DetallePedidoId;
+import com.edu.idat.amorecaffe.entity.ProductoEntity;
 import com.edu.idat.amorecaffe.repository.CabeceraPedidoRepository;
 import com.edu.idat.amorecaffe.repository.DetallePedidoRepository;
 import com.edu.idat.amorecaffe.repository.ProductoRepository;
@@ -37,8 +39,6 @@ public class DetallePedidoServiceImp implements DetallePedidoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-
-
     @Override
     @Transactional(readOnly = true)
     public List<DetallePedidoEntity> findAll() {
@@ -46,59 +46,70 @@ public class DetallePedidoServiceImp implements DetallePedidoService {
     }
 
     @Override
-    public DetallePedidoEntity findOne(String search) throws ClassNotFoundException {
+    public DetallePedidoEntity findOne(String cabventa,String pro) throws ClassNotFoundException {
         DetallePedidoEntity detallePedido = null;
+        detallePedido = DetallePedidoRepository.findById(new DetallePedidoId(cabventa, pro)).orElse(null);
 
-        if (uuidValidate.matcher(search).matches()) {
-            detallePedido = DetallePedidoRepository.findById(search).orElse(null);
-        }
         if (detallePedido == null) {
             throw new ClassNotFoundException(
-                    String.format("DetallePedido with id or slug '%s' not found", search));
+                    String.format("DetallePedido with id or slug ['%s','%s'] not found", cabventa,pro));
         }
         return detallePedido;
     }
 
     @Override
-    public DetallePedidoEntity create(DetallePedidoEntity DetallePedido) throws ClassNotFoundException{
-        String codProducto = DetallePedido.getProducto().getId();
-        productoRepository.findById(codProducto).orElseThrow(()->new ClassNotFoundException(
-            String.format("Producto with id '%s' not found", codProducto))
-        );
-        return DetallePedidoRepository.save(DetallePedido);
+    public DetallePedidoEntity create(DetallePedidoEntity detallePedido) throws ClassNotFoundException {
+        String codProducto = detallePedido.getProducto().getId(), codVenta = detallePedido.getCabventa().getId();
+        ProductoEntity pro = productoRepository.findById(codProducto).orElseThrow(() -> new ClassNotFoundException(
+                String.format("Producto with id '%s' not found", codProducto)));
+        CabeceraPedidoEntity cabVenta = cabPedidoRepository.findById(codVenta)
+                .orElseThrow(() -> new ClassNotFoundException(
+                        String.format("CabeceraPedido with id '%s' not found", codVenta)));
+
+        DetallePedidoId detId = new DetallePedidoId(cabVenta.getId(), pro.getId());
+
+        detallePedido.setId(detId);
+        detallePedido.setPrecio_producto(pro.getPrecio());
+        detallePedido.setSubtotal(detallePedido.getPrecio_producto() * Double.valueOf(detallePedido.getCantidad()));
+        return DetallePedidoRepository.save(detallePedido);
     }
 
     @Override
     public void delete(String id) throws ClassNotFoundException, IllegalArgumentException, Exception {
         // if (!uuidValidate.matcher(id).matches()) {
-        //     throw new IllegalArgumentException(String.format("id '%s' must be a uuid", id));
+        // throw new IllegalArgumentException(String.format("id '%s' must be a uuid",
+        // id));
         // }
         // DetallePedidoEntity DetallePedido = this.findOne(id);
-        // CabeceraPedidoEntity cabVenta = cabPedidoRepository.findById(DetallePedido.getCabventa().getId()).orElse(null);
+        // CabeceraPedidoEntity cabVenta =
+        // cabPedidoRepository.findById(DetallePedido.getCabventa().getId()).orElse(null);
 
         // if (cabVenta != null)
-        //     throw new Exception(String.format("DetallePedido with id '%s' cannot be deleted because it is in use.", id));
+        // throw new Exception(String.format("DetallePedido with id '%s' cannot be
+        // deleted because it is in use.", id));
 
         // DetallePedidoRepository.delete(DetallePedido);
         return;
     }
 
     @Override
-    public DetallePedidoEntity update(DetallePedidoEntity DetallePedidoEntityDto, String id) throws ClassNotFoundException {
-        if (!uuidValidate.matcher(id).matches()) {
-            throw new IllegalArgumentException(String.format("id '%s' must be a uuid", id));
+    public DetallePedidoEntity update(DetallePedidoEntity DetallePedidoEntityDto,String cabventa,String pro)
+            throws ClassNotFoundException {
+        if (!uuidValidate.matcher(cabventa).matches() || !uuidValidate.matcher(pro).matches() ) {
+            throw new IllegalArgumentException(String.format("id ['%s','%s'] must be a uuid", cabventa,pro));
         }
-        DetallePedidoEntity det = this.findOne(id);
+        DetallePedidoEntity det = this.findOne(cabventa, pro);
         BeanUtils.copyProperties(DetallePedidoEntityDto, det);
-        return DetallePedidoRepository.save(det);
+
+        return DetallePedidoRepository.save(DetallePedidoEntityDto);
     }
 
     // private void verificar(String dni){
-    //     DetallePedidoEntity DetallePedidoNotValidate = DetallePedidoRepository.findByDni(dni);
-    //     if (DetallePedidoNotValidate != null) {
-    //         throw new IllegalArgumentException(
-    //                 String.format("DetallePedido with dni '%s' is exists in db", dni));
-    //     }
+    // DetallePedidoEntity DetallePedidoNotValidate =
+    // DetallePedidoRepository.findByDni(dni);
+    // if (DetallePedidoNotValidate != null) {
+    // throw new IllegalArgumentException(
+    // String.format("DetallePedido with dni '%s' is exists in db", dni));
+    // }
     // }
 }
- 

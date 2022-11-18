@@ -17,11 +17,11 @@ public interface DetallePedidoService {
 
     public List<DetallePedidoEntity> findAll();
 
-    public DetallePedidoEntity findOne(String search) throws ClassNotFoundException;
+    public DetallePedidoEntity findOne(String cabventa,String pro) throws ClassNotFoundException;
 
     public DetallePedidoEntity create(DetallePedidoEntity detallePedidoEntity) throws ClassNotFoundException;
 
-    public DetallePedidoEntity update(DetallePedidoEntity DetallePedidoEntityDto, String id) throws ClassNotFoundException ;
+    public DetallePedidoEntity update(DetallePedidoEntity DetallePedidoEntityDto,String cabventa,String pro) throws ClassNotFoundException ;
 
     public void delete(String id) throws ClassNotFoundException, IllegalArgumentException, Exception;
 }

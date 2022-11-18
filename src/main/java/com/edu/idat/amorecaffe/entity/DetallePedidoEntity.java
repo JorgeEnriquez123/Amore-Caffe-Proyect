@@ -40,32 +40,21 @@ public class DetallePedidoEntity implements Serializable {
     DetallePedidoId id;
 
     private static final long serialVersionUID = 1L;
-    @OneToOne
+    @OneToOne()
     @MapsId("id_cabventa")
     private CabeceraPedidoEntity cabventa;
     @OneToOne
     @MapsId("id_producto")
     private ProductoEntity producto;
-
+ 
     @Column(name = "precio", nullable = false, columnDefinition = "Decimal(10,2)")
-    @NotNull(message = "precio must not be null")
     @Positive()
     private Double precio_producto;
     @Column(name = "cantidad", nullable = false)
-    @NotNull(message = "cantidad must not be null")
-    @Pattern(regexp = "[0-9]", message = "cantidad must be a number")
     @Positive
-    @Min(1)
     private int cantidad;
     @Column(name = "subtotal", nullable = false,columnDefinition = "Decimal(10,2)")
-    @Positive
-    @Min(1)
-    private double subtotal;
-    
-    @PrePersist
-    @PreUpdate
-    public void prePersist() {
-        this.precio_producto = this.producto.getPrecio();
-        this.subtotal = this.precio_producto * Double.valueOf(this.cantidad);
-    }
+    private Double subtotal;
+     
 }
+ 

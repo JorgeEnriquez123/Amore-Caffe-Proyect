@@ -45,7 +45,7 @@ public class CabeceraPedidoController {
 
     }
     @PatchMapping("/update/{id}")
-    public ResponseEntity<?> patch(@PathVariable String id, @RequestBody Map<Object, Object> cabeceraPedidoDto) throws ClassNotFoundException {
+    public ResponseEntity<?> patch(@PathVariable String id, @RequestBody CabeceraPedidoEntity cabeceraPedidoDto) throws ClassNotFoundException {
         return new ResponseEntity<>(cabeceraPedidoService.update(cabeceraPedidoDto,id), HttpStatus.OK);
 
     }

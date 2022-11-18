@@ -44,15 +44,15 @@ public class DetallePedidoController {
         return new ResponseEntity<>(DetallePedidoService.create(DetallePedidoEntity), HttpStatus.CREATED);
 
     }
-    @PatchMapping("/update/{id}")
-    public ResponseEntity<?> patch(@PathVariable String id,@Valid @RequestBody DetallePedidoEntity DetallePedidoDto) throws ClassNotFoundException {
-        return new ResponseEntity<>(DetallePedidoService.update(DetallePedidoDto,id), HttpStatus.OK);
+    @PatchMapping("/update/{cabventa}/{pro}")
+    public ResponseEntity<?> patch(@PathVariable String cabventa,@PathVariable String pro,@Valid @RequestBody DetallePedidoEntity DetallePedidoDto) throws ClassNotFoundException {
+        return new ResponseEntity<>(DetallePedidoService.update(DetallePedidoDto,cabventa,pro), HttpStatus.OK);
 
     }
 
-    @GetMapping("/search/{search}")
-    public ResponseEntity<?> search(@PathVariable String search) throws ClassNotFoundException {
-        return new ResponseEntity<>(DetallePedidoService.findOne(search), HttpStatus.OK);
+    @GetMapping("/search/{cabventa}/{pro}")
+    public ResponseEntity<?> search(@PathVariable String cabventa,@PathVariable String pro ) throws ClassNotFoundException {
+        return new ResponseEntity<>(DetallePedidoService.findOne(cabventa,pro), HttpStatus.OK);
 
     }
 

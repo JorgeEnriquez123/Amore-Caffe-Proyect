@@ -21,7 +21,9 @@ public interface CabeceraPedidoService {
 
     public CabeceraPedidoEntity create(CabeceraPedidoEntity cabeceraPedidoEntity) throws ClassNotFoundException;
 
-    public CabeceraPedidoEntity update(Map<Object, Object> cabeceraPedidoEntity,String id)throws ClassNotFoundException;
+    public CabeceraPedidoEntity update(CabeceraPedidoEntity cabeceraPedidoEntity,String id)throws ClassNotFoundException;
 
     public void delete(String id)throws ClassNotFoundException, IllegalArgumentException, Exception;
+    public void delete2(String id)throws ClassNotFoundException, IllegalArgumentException, Exception;
+
 }

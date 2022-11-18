@@ -10,13 +10,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.edu.idat.amorecaffe.entity.CabeceraPedidoEntity;
 import com.edu.idat.amorecaffe.entity.DetallePedidoEntity;
+import com.edu.idat.amorecaffe.entity.DetallePedidoId;
 import com.edu.idat.amorecaffe.entity.ProductoEntity;
 
 /**
  *
  * @author 51934
  */
-public interface DetallePedidoRepository extends JpaRepository<DetallePedidoEntity, String> {
+public interface DetallePedidoRepository extends JpaRepository<DetallePedidoEntity, DetallePedidoId> {
     List<DetallePedidoEntity> findByProducto(ProductoEntity productoEntity);
     List<DetallePedidoEntity> findByCabventa( CabeceraPedidoEntity cabeceraPedidoEntity);
 }
